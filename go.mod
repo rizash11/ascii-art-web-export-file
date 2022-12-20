@@ -1,3 +1,3 @@
-module AsciiArtWebExportFile
+module AsciiArtWebExport
 
 go 1.18

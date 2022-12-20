@@ -1,7 +1,7 @@
 package main
 
 import (
-	"AsciiArtWebExportFile/pkg/AsciiArt"
+	"AsciiArtWebExport/pkg/AsciiArt"
 	"net/http"
 )
 
