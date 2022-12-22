@@ -7,6 +7,7 @@ func (app *application) routes() *http.ServeMux {
 	router := http.NewServeMux()
 	router.HandleFunc("/", app.home)
 	router.HandleFunc("/ascii-art-web", app.asciiArtWeb)
+	router.HandleFunc("/download", app.download)
 
 	// Applies css to html templates.
 	router.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./ui/static/"))))

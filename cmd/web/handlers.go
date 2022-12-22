@@ -2,6 +2,8 @@ package main
 
 import (
 	"AsciiArtWebExport/pkg/AsciiArt"
+	"fmt"
+	"io"
 	"net/http"
 	"os"
 )
@@ -15,6 +17,8 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
+
+	os.Create("output.txt")
 
 	app.render(w, r, "home.page.html", nil)
 }
@@ -56,4 +60,28 @@ func (app *application) asciiArtWeb(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.render(w, r, "ascii-art.page.html", td)
+}
+
+func (app *application) download(w http.ResponseWriter, r *http.Request) {
+	// if err := r.ParseForm(); err != nil {
+	//     http.Error(w, err.Error(), http.StatusInternalServerError)
+	//     return
+	// }
+
+	f, err := os.Open("output.txt")
+	if f != nil {
+		defer f.Close()
+	}
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	contentDisposition := fmt.Sprintf("attachment; filename=%s", f.Name())
+	w.Header().Set("Content-Disposition", contentDisposition)
+
+	if _, err := io.Copy(w, f); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

@@ -28,9 +28,15 @@
         </div>
     </form>
 
-    <form action="/" method="GET">
-        <button type="submit">Clear</button>
-    </form>
+    <div class="buttons">
+        <form action="/" method="GET">
+            <button type="submit">Clear</button>
+        </form>
+    
+        <form action="/download" method="CONNECT">
+            <button type="submit">Download</button>
+        </form>
+    </div>
    
     {{template "ascii-art" .}}
 </body>
