@@ -3,6 +3,7 @@ package main
 import (
 	"AsciiArtWebExport/pkg/AsciiArt"
 	"net/http"
+	"os"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -39,6 +40,19 @@ func (app *application) asciiArtWeb(w http.ResponseWriter, r *http.Request) {
 
 	td := &templateData{
 		AsciiOutput: AsciiOutput,
+	}
+
+	f, err := os.Create("output.txt")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	defer f.Close()
+
+	_, err = f.Write([]byte(AsciiOutput))
+	if err != nil {
+		app.serverError(w, err)
+		return
 	}
 
 	app.render(w, r, "ascii-art.page.html", td)
