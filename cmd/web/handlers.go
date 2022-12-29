@@ -64,24 +64,22 @@ func (app *application) asciiArtWeb(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) download(w http.ResponseWriter, r *http.Request) {
 	// if err := r.ParseForm(); err != nil {
-	//     http.Error(w, err.Error(), http.StatusInternalServerError)
-	//     return
+	// 	app.serverError(w, err)
+	// 	return
 	// }
 
 	f, err := os.Open("output.txt")
-	if f != nil {
-		defer f.Close()
-	}
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
+	defer f.Close()
 
 	contentDisposition := fmt.Sprintf("attachment; filename=%s", f.Name())
 	w.Header().Set("Content-Disposition", contentDisposition)
 
 	if _, err := io.Copy(w, f); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		app.serverError(w, err)
 		return
 	}
 }
