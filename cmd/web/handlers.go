@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -77,6 +78,17 @@ func (app *application) download(w http.ResponseWriter, r *http.Request) {
 
 	contentDisposition := fmt.Sprintf("attachment; filename=%s", f.Name())
 	w.Header().Set("Content-Disposition", contentDisposition)
+
+	contentType := "text/plain; charset=utf-8"
+	w.Header().Set("Content-Type", contentType)
+
+	finfo, err := f.Stat()
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	contentLength := strconv.Itoa(int(finfo.Size()))
+	w.Header().Set("Content-Length", contentLength)
 
 	if _, err := io.Copy(w, f); err != nil {
 		app.serverError(w, err)
